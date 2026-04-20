@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const { faker } = require('@faker-js/faker');
 require('dotenv').config();
 
+///OK
+
 const Student = require('./models/Student');
 const User = require('./models/User');
 
