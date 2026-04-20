@@ -1,4 +1,4 @@
-// pages/AttendancePage.js
+﻿// pages/AttendancePage.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { ClipboardList, Save, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import { attendanceService, courseService, studentService } from '../services/api';
@@ -13,7 +13,7 @@ const STATUS_CONFIG = {
 };
 
 const AttendancePage = () => {
-  const { user }  = useAuth();
+  const { user  } = useAuth || {}();
   const isTeacher = user?.role === 'teacher' || user?.role === 'admin';
   const isStudent = user?.role === 'student';
 
@@ -90,9 +90,9 @@ const AttendancePage = () => {
     setError('');
     setSuccess('');
     try {
-      const attendanceData = students.map(s => ({ studentId: s._id, status: attendance[s._id] || 'present' }));
+      const attendanceData = (students || []).map(s => ({ studentId: s._id, status: attendance[s._id] || 'present' }));
       await attendanceService.mark({ courseId: selectedCourse, date, attendanceData });
-      setSuccess(`Attendance marked for ${students.length} students`);
+      setSuccess(`Attendance marked for ${students?.length || 0} students`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to save attendance');
     } finally {
@@ -102,7 +102,7 @@ const AttendancePage = () => {
 
   const presentCount = Object.values(attendance).filter(s => s === 'present' || s === 'late').length;
 
-  // ── Student View ─────────────────────────────────────
+  // â”€â”€ Student View â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (isStudent) {
     return (
       <div className="space-y-5">
@@ -131,7 +131,7 @@ const AttendancePage = () => {
               ].map(({ label, value, color }) => (
                 <div key={label} className="card">
                   <p className="text-xs text-gray-500">{label}</p>
-                  <p className={`text-2xl font-bold mt-1 text-${color}-600`}>{value ?? '—'}</p>
+                  <p className={`text-2xl font-bold mt-1 text-${color}-600`}>{value ?? 'â€”'}</p>
                 </div>
               ))}
             </div>
@@ -172,7 +172,7 @@ const AttendancePage = () => {
     );
   }
 
-  // ── Teacher / Admin View ──────────────────────────────
+  // â”€â”€ Teacher / Admin View â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   return (
     <div className="space-y-5">
       <div>
@@ -189,7 +189,7 @@ const AttendancePage = () => {
           <div className="flex-1">
             <label className="label">Course <span className="text-red-400">*</span></label>
             <select value={selectedCourse} onChange={e => setSelectedCourse(e.target.value)} className="input">
-              <option value="">— Select Course —</option>
+              <option value="">â€” Select Course â€”</option>
               {courses.map(c => <option key={c._id} value={c._id}>{c.name} ({c.code})</option>)}
             </select>
           </div>
@@ -216,7 +216,7 @@ const AttendancePage = () => {
               );
             })}
             <div className="ml-auto text-sm text-gray-500">
-              Present: <strong className="text-green-600">{presentCount}</strong> / {students.length}
+              Present: <strong className="text-green-600">{presentCount}</strong> / {students?.length || 0}
             </div>
           </div>
 
@@ -234,7 +234,7 @@ const AttendancePage = () => {
                   </div>
                 </div>
                 <div className="divide-y divide-gray-50 dark:divide-gray-800">
-                  {students.map((s, i) => {
+                  {(students || []).map((s, i) => {
                     const currentStatus = attendance[s._id] || 'present';
                     return (
                       <div key={s._id} className="px-6 py-3 grid grid-cols-12 items-center gap-4 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
@@ -288,3 +288,5 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
+
+

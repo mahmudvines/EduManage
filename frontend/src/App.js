@@ -1,93 +1,52 @@
-// ============================================================
-// App.js - Root component with routing
-// ============================================================
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+﻿import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
-
-// Pages
-import LoginPage     from './pages/LoginPage';
-import RegisterPage  from './pages/RegisterPage';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Layout from './components/Layout';
+import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import StudentsPage  from './pages/StudentsPage';
-import TeachersPage  from './pages/TeachersPage';
-import CoursesPage   from './pages/CoursesPage';
-import AttendancePage from './pages/AttendancePage';
-import GradesPage    from './pages/GradesPage';
-import ProfilePage   from './pages/ProfilePage';
+import StudentManagementPage from './pages/StudentManagementPage';
+import ClassManagementPage from './pages/ClassManagementPage';
+import TeacherManagementPage from './pages/TeacherManagementPage';
+import SettingsPage from './pages/SettingsPage';
+import AdminProfilePage from './pages/AdminProfilePage';
 
-// Layout
-import Layout from './components/common/Layout';
-
-// ── Protected Route ──────────────────────────────────────
-// Redirects to login if not authenticated
-const ProtectedRoute = ({ children, roles }) => {
+const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-500">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
+  if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
-
-  // Role-based protection
-  if (roles && !roles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
   return children;
 };
 
-// ── Public Route ─────────────────────────────────────────
-// Redirects to dashboard if already logged in
-const PublicRoute = ({ children }) => {
+const AppRoutes = () => {
   const { user, loading } = useAuth();
-  if (loading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
-  return children;
-};
-
-function AppRoutes() {
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <Navigate to="/login" replace />;
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/login"    element={<PublicRoute><LoginPage /></PublicRoute>} />
-      <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
-
-      {/* Protected Routes (wrapped in Layout) */}
-      <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="dashboard"  element={<DashboardPage />} />
-        <Route path="students"   element={<ProtectedRoute roles={['admin','teacher']}><StudentsPage /></ProtectedRoute>} />
-        <Route path="teachers"   element={<ProtectedRoute roles={['admin']}><TeachersPage /></ProtectedRoute>} />
-        <Route path="courses"    element={<CoursesPage />} />
-        <Route path="attendance" element={<AttendancePage />} />
-        <Route path="grades"     element={<GradesPage />} />
-        <Route path="profile"    element={<ProfilePage />} />
-      </Route>
-
-      {/* Catch-all */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
-    </Routes>
+    <Layout>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/students" element={<StudentManagementPage />} />
+        <Route path="/teachers" element={<TeacherManagementPage />} />
+        <Route path="/classes" element={<ClassManagementPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/profile" element={<AdminProfilePage />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </Layout>
   );
-}
+};
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/*" element={<ProtectedRoute><AppRoutes /></ProtectedRoute>} />
+          </Routes>
+        </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
   );

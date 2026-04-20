@@ -1,4 +1,4 @@
-// pages/CoursesPage.js
+﻿// pages/CoursesPage.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Edit2, Trash2, BookOpen, Users, Clock } from 'lucide-react';
 import { courseService, teacherService } from '../services/api';
@@ -64,8 +64,8 @@ const CourseForm = ({ course, onSave, onClose }) => {
         <div>
           <label className="label">Assigned Teacher</label>
           <select name="teacher" value={form.teacher} onChange={handleChange} className="input">
-            <option value="">— Unassigned —</option>
-            {teachers.map(t => <option key={t._id} value={t._id}>{t.name} ({t.department})</option>)}
+            <option value="">â€” Unassigned â€”</option>
+            {(teachers || []).map(t => <option key={t._id} value={t._id}>{t.name} ({t.department})</option>)}
           </select>
         </div>
         <div>
@@ -152,7 +152,7 @@ const CourseCard = ({ course, isAdmin, onEdit, onDelete }) => {
 };
 
 const CoursesPage = () => {
-  const { user } = useAuth();
+  const { user  } = useAuth || {}();
   const isAdmin  = user?.role === 'admin';
 
   const [courses, setCourses]   = useState([]);
@@ -184,7 +184,7 @@ const CoursesPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Courses</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{courses.length} courses available</p>
+          <p className="text-sm text-gray-500 mt-0.5">{courses?.length || 0} courses available</p>
         </div>
         {isAdmin && (
           <button onClick={() => setModal({ open: true, course: null })} className="btn-primary">
@@ -236,3 +236,5 @@ const CoursesPage = () => {
 };
 
 export default CoursesPage;
+
+

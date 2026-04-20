@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // pages/StudentsPage.js - Full CRUD for Students
 // ============================================================
 import React, { useState, useEffect, useCallback } from 'react';
@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import Modal from '../components/common/Modal';
 import { LoadingSpinner, EmptyState, ErrorAlert } from '../components/common/LoadingSpinner';
 
-// ── Student Form (Add / Edit) ────────────────────────────
+// â”€â”€ Student Form (Add / Edit) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const StudentForm = ({ student, onSave, onClose }) => {
   const isEdit = !!student;
   const [form, setForm] = useState({
@@ -99,9 +99,9 @@ const StudentForm = ({ student, onSave, onClose }) => {
   );
 };
 
-// ── Main Page ────────────────────────────────────────────
+// â”€â”€ Main Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const StudentsPage = () => {
-  const { user } = useAuth();
+  const { user  } = useAuth || {}();
   const isAdmin  = user?.role === 'admin';
 
   const [students, setStudents] = useState([]);
@@ -155,7 +155,7 @@ const StudentsPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Students</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{pagination.totalStudents || 0} total students</p>
+          <p className="text-sm text-gray-500 mt-0.5">{pagination?.totalStudents || 0} total students</p>
         </div>
         {isAdmin && (
           <button onClick={() => openModal()} className="btn-primary">
@@ -198,7 +198,7 @@ const StudentsPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
-                {students.map((s, i) => (
+                {(students || []).map((s, i) => (
                   <tr key={s._id} className="table-row">
                     <td className="table-cell">
                       <div className="flex items-center gap-3">
@@ -213,7 +213,7 @@ const StudentsPage = () => {
                       </div>
                     </td>
                     <td className="table-cell font-mono text-xs">{s.studentId}</td>
-                    <td className="table-cell">{s.department || '—'}</td>
+                    <td className="table-cell">{s.department || 'â€”'}</td>
                     <td className="table-cell">
                       <span className={`badge ${yearColors[s.year] || 'badge-gray'}`}>{s.year}</span>
                     </td>
@@ -278,3 +278,5 @@ const StudentsPage = () => {
 };
 
 export default StudentsPage;
+
+

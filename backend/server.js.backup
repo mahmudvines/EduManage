@@ -1,0 +1,61 @@
+﻿require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MongoDB Connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/student_management';
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => console.error('MongoDB connection error:', err.message));
+
+// Routes
+const authRoutes = require('./routes/auth');
+const studentRoutes = require('./routes/students');
+const teacherRoutes = require('./routes/teachers');
+const classRoutes = require('./routes/classes');
+const attendanceRoutes = require('./routes/attendance');
+const gradeRoutes = require('./routes/grades');
+const feeRoutes = require('./routes/fees');
+
+// Mount with /api prefix (standard)
+app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/grades', gradeRoutes);
+app.use('/api/fees', feeRoutes);
+
+// ALSO mount without /api prefix (frontend compatibility)
+app.use('/auth', authRoutes);
+app.use('/students', studentRoutes);
+app.use('/teachers', teacherRoutes);
+app.use('/classes', classRoutes);
+app.use('/attendance', attendanceRoutes);
+app.use('/grades', gradeRoutes);
+app.use('/fees', feeRoutes);
+
+// Production static serving
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
+const PORT = process.env.PORT || 5001;
+const HOST = process.env.HOST || '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
+  console.log('Server running on http://' + HOST + ':' + PORT);
+  console.log('API routes available at both /api/* and /*');
+});

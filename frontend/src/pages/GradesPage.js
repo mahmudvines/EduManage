@@ -1,4 +1,4 @@
-// pages/GradesPage.js
+﻿// pages/GradesPage.js
 import React, { useState, useEffect } from 'react';
 import { BarChart3, Plus, Save } from 'lucide-react';
 import { gradeService, courseService, studentService } from '../services/api';
@@ -13,7 +13,7 @@ const GRADE_COLORS = {
   'D':  'badge-red',   'F': 'badge-red',   'N/A': 'badge-gray'
 };
 
-// ── Student Grades View ──────────────────────────────────
+// â”€â”€ Student Grades View â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const StudentGradesView = ({ studentId }) => {
   const [data, setData]     = useState(null);
   const [loading, setLoading] = useState(true);
@@ -89,7 +89,7 @@ const StudentGradesView = ({ studentId }) => {
   );
 };
 
-// ── Upload Grades Form (Teacher/Admin) ───────────────────
+// â”€â”€ Upload Grades Form (Teacher/Admin) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const UploadGradesForm = () => {
   const [courses, setCourses]   = useState([]);
   const [courseStudents, setCourseStudents] = useState([]);
@@ -157,14 +157,14 @@ const UploadGradesForm = () => {
           <div>
             <label className="label">Course</label>
             <select value={selectedCourse} onChange={e => setSelectedCourse(e.target.value)} className="input">
-              <option value="">— Select Course —</option>
+              <option value="">â€” Select Course â€”</option>
               {courses.map(c => <option key={c._id} value={c._id}>{c.name} ({c.code})</option>)}
             </select>
           </div>
           <div>
             <label className="label">Student</label>
             <select value={selectedStudent} onChange={e => setSelectedStudent(e.target.value)} className="input" disabled={!selectedCourse}>
-              <option value="">— Select Student —</option>
+              <option value="">â€” Select Student â€”</option>
               {courseStudents.map(s => <option key={s._id} value={s._id}>{s.name} ({s.studentId})</option>)}
             </select>
           </div>
@@ -202,7 +202,7 @@ const UploadGradesForm = () => {
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
               {assessments.map((a, i) => {
-                const contribution = a.score !== '' ? ((a.score / a.maxScore) * a.weight).toFixed(1) : '—';
+                const contribution = a.score !== '' ? ((a.score / a.maxScore) * a.weight).toFixed(1) : 'â€”';
                 return (
                   <tr key={i}>
                     <td className="py-2 px-3">
@@ -234,7 +234,7 @@ const UploadGradesForm = () => {
                 <td className="py-2 px-3 font-semibold text-blue-600">
                   {assessments.some(a => a.score !== '')
                     ? assessments.reduce((s, a) => s + (a.score !== '' ? (a.score / a.maxScore) * a.weight : 0), 0).toFixed(1)
-                    : '—'}
+                    : 'â€”'}
                 </td>
               </tr>
             </tfoot>
@@ -253,7 +253,7 @@ const UploadGradesForm = () => {
 };
 
 const GradesPage = () => {
-  const { user }  = useAuth();
+  const { user  } = useAuth || {}();
   const isStudent = user?.role === 'student';
 
   const [studentId, setStudentId] = useState(null);
@@ -283,3 +283,4 @@ const GradesPage = () => {
 };
 
 export default GradesPage;
+

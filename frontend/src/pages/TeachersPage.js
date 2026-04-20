@@ -1,4 +1,4 @@
-// pages/TeachersPage.js
+﻿// pages/TeachersPage.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Search, Edit2, Trash2, UserCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 import { teacherService } from '../services/api';
@@ -103,7 +103,7 @@ const TeachersPage = () => {
   const deptMap = {};
   let colorIdx = 0;
   const getDeptColor = (dept) => {
-    if (!deptMap[dept]) deptMap[dept] = deptColors[colorIdx++ % deptColors.length];
+    if (!deptMap[dept]) deptMap[dept] = deptColors[colorIdx++ % deptColors?.length || 0];
     return deptMap[dept];
   };
 
@@ -112,7 +112,7 @@ const TeachersPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Teachers</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{pagination.totalTeachers || 0} total teachers</p>
+          <p className="text-sm text-gray-500 mt-0.5">{pagination?.totalTeachers || 0} total teachers</p>
         </div>
         <button onClick={() => setModal({ open: true, teacher: null })} className="btn-primary">
           <Plus size={16} /> Add Teacher
@@ -146,7 +146,7 @@ const TeachersPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
-                {teachers.map((t, i) => (
+                {(teachers || []).map((t, i) => (
                   <tr key={t._id} className="table-row">
                     <td className="table-cell">
                       <div className="flex items-center gap-3">
@@ -164,7 +164,7 @@ const TeachersPage = () => {
                     <td className="table-cell">
                       <span className={`badge ${getDeptColor(t.department)}`}>{t.department}</span>
                     </td>
-                    <td className="table-cell text-gray-500">{t.specialization || '—'}</td>
+                    <td className="table-cell text-gray-500">{t.specialization || 'â€”'}</td>
                     <td className="table-cell">
                       <span className="badge badge-gray">{t.assignedCourses?.length || 0} courses</span>
                     </td>
@@ -209,3 +209,5 @@ const TeachersPage = () => {
 };
 
 export default TeachersPage;
+
+

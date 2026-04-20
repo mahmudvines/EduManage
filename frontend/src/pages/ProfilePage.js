@@ -1,4 +1,4 @@
-// pages/ProfilePage.js
+﻿// pages/ProfilePage.js
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Shield, Calendar, Save, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -6,7 +6,7 @@ import { authService } from '../services/api';
 import { ErrorAlert, SuccessAlert } from '../components/common/LoadingSpinner';
 
 const ProfilePage = () => {
-  const { user, setUser } = useAuth();
+  const { user, setUser  } = useAuth || {}();
   const [profile, setProfile]     = useState(null);
   const [activeTab, setActiveTab] = useState('profile');
   const [error, setError]         = useState('');
@@ -83,7 +83,7 @@ const ProfilePage = () => {
               { icon: User,     label: 'Full Name',   value: user?.name },
               { icon: Mail,     label: 'Email',       value: user?.email },
               { icon: Shield,   label: 'Role',        value: user?.role, className: 'capitalize' },
-              { icon: Calendar, label: 'Member Since', value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—' }
+              { icon: Calendar, label: 'Member Since', value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'â€”' }
             ].map(({ icon: Icon, label, value, className }) => (
               <div key={label} className="flex items-center gap-4 py-3 border-b border-gray-50 dark:border-gray-800 last:border-0">
                 <div className="w-9 h-9 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
@@ -91,7 +91,7 @@ const ProfilePage = () => {
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 font-medium">{label}</p>
-                  <p className={`text-sm font-medium text-gray-800 dark:text-gray-200 mt-0.5 ${className || ''}`}>{value || '—'}</p>
+                  <p className={`text-sm font-medium text-gray-800 dark:text-gray-200 mt-0.5 ${className || ''}`}>{value || 'â€”'}</p>
                 </div>
               </div>
             ))}
@@ -106,8 +106,8 @@ const ProfilePage = () => {
               <div className="grid grid-cols-2 gap-3">
                 {user?.role === 'student' && [
                   ['Student ID', profile.studentId],
-                  ['Department', profile.department || '—'],
-                  ['Year', profile.year || '—'],
+                  ['Department', profile.department || 'â€”'],
+                  ['Year', profile.year || 'â€”'],
                   ['GPA', profile.gpa?.toFixed(2) || '0.00'],
                   ['Attendance', `${profile.attendancePercentage || 0}%`],
                   ['Enrolled Courses', profile.enrolledCourses?.length || 0]
@@ -120,9 +120,9 @@ const ProfilePage = () => {
 
                 {user?.role === 'teacher' && [
                   ['Teacher ID', profile.teacherId],
-                  ['Department', profile.department || '—'],
-                  ['Specialization', profile.specialization || '—'],
-                  ['Qualification', profile.qualification || '—'],
+                  ['Department', profile.department || 'â€”'],
+                  ['Specialization', profile.specialization || 'â€”'],
+                  ['Qualification', profile.qualification || 'â€”'],
                   ['Courses', profile.assignedCourses?.length || 0]
                 ].map(([k, v]) => (
                   <div key={k} className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
@@ -168,3 +168,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+

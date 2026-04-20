@@ -1,4 +1,4 @@
-// pages/RegisterPage.js
+﻿// pages/RegisterPage.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GraduationCap, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
@@ -9,7 +9,7 @@ const RegisterPage = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
-  const { register }          = useAuth();
+  const { register  } = useAuth || {}();
   const navigate              = useNavigate();
 
   const handleChange = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
@@ -114,3 +114,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+

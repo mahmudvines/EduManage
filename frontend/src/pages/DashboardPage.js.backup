@@ -1,0 +1,113 @@
+﻿import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
+import { GraduationCap, Users, BookOpen, Calendar, TrendingUp, Award, Clock, Bell } from 'lucide-react';
+
+const DashboardPage = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const { role, name, email } = user;
+
+  // Different stats based on role
+  const stats = role === 'admin' 
+    ? [
+        { title: 'Total Students', value: '1,234', icon: Users, color: 'bg-blue-500' },
+        { title: 'Total Teachers', value: '86', icon: Users, color: 'bg-green-500' },
+        { title: 'Classes', value: '42', icon: BookOpen, color: 'bg-purple-500' },
+        { title: 'Attendance Rate', value: '94%', icon: Calendar, color: 'bg-orange-500' },
+      ]
+    : role === 'teacher'
+    ? [
+        { title: 'My Students', value: '28', icon: Users, color: 'bg-blue-500' },
+        { title: 'Classes Today', value: '4', icon: Calendar, color: 'bg-green-500' },
+        { title: 'Pending Assignments', value: '12', icon: BookOpen, color: 'bg-purple-500' },
+        { title: 'Avg. Grade', value: '85%', icon: TrendingUp, color: 'bg-orange-500' },
+      ]
+    : [
+        { title: 'Courses', value: '6', icon: BookOpen, color: 'bg-blue-500' },
+        { title: 'Attendance', value: '92%', icon: Calendar, color: 'bg-green-500' },
+        { title: 'GPA', value: '3.6', icon: Award, color: 'bg-purple-500' },
+        { title: 'Upcoming Exams', value: '3', icon: Clock, color: 'bg-orange-500' },
+      ];
+
+  const recentActivities = [
+    { id: 1, action: 'New student enrolled', time: '2 hours ago', icon: Users },
+    { id: 2, action: 'Math exam scheduled', time: '5 hours ago', icon: Calendar },
+    { id: 3, action: 'Grade updated for Class 10', time: '1 day ago', icon: Award },
+  ];
+
+  return (
+    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
+      {/* Welcome Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Welcome back, {name?.split(' ')[0] || 'User'}!
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">
+          {role === 'admin' && 'Here\'s what\'s happening with your school today.'}
+          {role === 'teacher' && 'Here\'s your class overview and tasks.'}
+          {role === 'student' && 'Here\'s your academic progress summary.'}
+        </p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{stat.title}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stat.value}</p>
+              </div>
+              <div className={`${stat.color} p-3 rounded-lg`}>
+                <stat.icon size={24} className="text-white" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent Activity & Notifications */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
+          <div className="space-y-4">
+            {recentActivities.map(activity => (
+              <div key={activity.id} className="flex items-center gap-3">
+                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg">
+                  <activity.icon size={16} className="text-gray-600 dark:text-gray-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-900 dark:text-white">{activity.action}</p>
+                  <p className="text-xs text-gray-500">{activity.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notifications</h2>
+          <div className="flex items-center justify-center h-32 text-gray-500">
+            <Bell size={32} className="mb-2" />
+            <p className="text-sm">No new notifications</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardPage;
