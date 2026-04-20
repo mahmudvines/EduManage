@@ -41,7 +41,9 @@ const ProfilePage = () => {
   return (
     <div className="space-y-5 max-w-3xl">
       <div>
-       </div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">My Profile</h2>
+        <p className="text-sm text-gray-500 mt-0.5">Manage your account settings</p>
+      </div>
 
       {/* Profile header card */}
       <div className="card">
