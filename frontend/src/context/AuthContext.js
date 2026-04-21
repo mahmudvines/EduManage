@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (response.data.success) {
-            setUser(response.data.data);
+            setUser(response.data.user);
           } else {
             localStorage.removeItem('token');
           }
@@ -59,24 +59,10 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = useCallback((updatedUser) => {
     setUser(updatedUser);
-    // Also update localStorage user object if needed (for other components)
-    const token = localStorage.getItem('token');
-    if (token && updatedUser) {
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-    }
   }, []);
 
   const updateAvatar = useCallback((avatarUrl) => {
     setUser(prev => ({ ...prev, avatar: avatarUrl }));
-    const token = localStorage.getItem('token');
-    if (token) {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const userObj = JSON.parse(storedUser);
-        userObj.avatar = avatarUrl;
-        localStorage.setItem('user', JSON.stringify(userObj));
-      }
-    }
   }, []);
 
   return (

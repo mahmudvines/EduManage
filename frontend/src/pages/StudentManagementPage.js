@@ -92,7 +92,7 @@ const StudentManagementPage = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Box><Typography variant="h4" fontWeight={700}>Student Management</Typography><Typography variant="body2" color="text.secondary">Manage all students, view details, and perform actions</Typography></Box>
         <Button variant="contained" startIcon={<Add />} onClick={() => setOpenDialog(true)}>Add Student</Button>
@@ -156,4 +156,3 @@ const StudentManagementPage = () => {
 };
 
 export default StudentManagementPage;
-

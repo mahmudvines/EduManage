@@ -68,7 +68,7 @@ const TeacherManagementPage = () => {
   const handleClose = () => { setOpenDialog(false); setEditingId(null); setForm({ name: '', email: '', password: '', department: '', subject: '' }); setError(''); setSuccess(''); };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Box><Typography variant="h4" fontWeight={700}>Teacher Management</Typography><Typography variant="body2" color="text.secondary">Manage all teachers, assign subjects, and view details</Typography></Box>
         <Button variant="contained" startIcon={<Add />} onClick={() => setOpenDialog(true)}>Add Teacher</Button>
@@ -109,4 +109,3 @@ const TeacherManagementPage = () => {
 };
 
 export default TeacherManagementPage;
-

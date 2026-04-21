@@ -179,8 +179,81 @@ app.get('/api/dashboard/course-enrollment', (req, res) => {
 });
 
 // ==================== START SERVER ====================
+
+// ==================== TEACHER ENDPOINTS ====================
+app.get('/api/teacher/dashboard', async (req, res) => {
+  const userId = getUserIdFromToken(req);
+  if (!userId) return res.status(401).json({ success: false });
+  const teacher = await User.findById(userId).select('-password');
+  const classes = await Class.find({ teacherId: userId }).populate('teacherId', 'name');
+  const students = await Student.find(); // In real app, filter by class
+  res.json({ success: true, data: { teacher, classes, students: students.slice(0, 10) } });
+});
+
+app.get('/api/teacher/classes', async (req, res) => {
+  const userId = getUserIdFromToken(req);
+  if (!userId) return res.status(401).json({ success: false });
+  const classes = await Class.find({ teacherId: userId }).populate('teacherId', 'name');
+  res.json({ success: true, data: classes });
+});
+
+app.get('/api/teacher/students', async (req, res) => {
+  const userId = getUserIdFromToken(req);
+  if (!userId) return res.status(401).json({ success: false });
+  // For simplicity, return all students (filter by class later)
+  const students = await Student.find();
+  res.json({ success: true, data: students });
+});
+
+app.post('/api/teacher/attendance', async (req, res) => {
+  // Placeholder – implement real attendance logic
+  res.json({ success: true, message: 'Attendance recorded' });
+});
+
+app.get('/api/teacher/grades', async (req, res) => {
+  // Placeholder – return grades for teacher's classes
+  res.json({ success: true, data: [] });
+});
+
+app.post('/api/teacher/grades', async (req, res) => {
+  res.json({ success: true, message: 'Grade saved' });
+});
+
+// ==================== STUDENT ENDPOINTS ====================
+app.get('/api/student/dashboard', async (req, res) => {
+  const userId = getUserIdFromToken(req);
+  if (!userId) return res.status(401).json({ success: false });
+  const student = await Student.findOne({ email: (await User.findById(userId)).email });
+  if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+  const classes = await Class.find(); // In real app, filter by student's enrolled classes
+  const grades = []; // Placeholder
+  const attendance = []; // Placeholder
+  res.json({ success: true, data: { student, classes, grades, attendance } });
+});
+
+app.get('/api/student/classes', async (req, res) => {
+  const userId = getUserIdFromToken(req);
+  if (!userId) return res.status(401).json({ success: false });
+  const student = await Student.findOne({ email: (await User.findById(userId)).email });
+  const classes = await Class.find(); // Replace with enrollment logic
+  res.json({ success: true, data: classes });
+});
+
+app.get('/api/student/grades', async (req, res) => {
+  res.json({ success: true, data: [] });
+});
+
+app.get('/api/student/attendance', async (req, res) => {
+  res.json({ success: true, data: [] });
+});
+
+
 const PORT = process.env.PORT || 5001;
 const HOST = process.env.HOST || '0.0.0.0';
+
 app.listen(PORT, HOST, () => {
   console.log(`🚀 Server running on http://${HOST}:${PORT}`);
 });
+
+
+

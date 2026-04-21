@@ -25,13 +25,30 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle, onDrawerClose }) => {
   const [openSettings, setOpenSettings] = useState(false);
 
   const isAdmin = user?.role === 'admin';
+  const isTeacher = user?.role === 'teacher';
+  const isStudent = user?.role === 'student';
 
-  const mainNavItems = isAdmin ? [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-    { text: 'Students', icon: <PeopleIcon />, path: '/students' },
-    { text: 'Teachers', icon: <SchoolIcon />, path: '/teachers' },
-    { text: 'Classes', icon: <MenuBookIcon />, path: '/classes' },
-  ] : [];
+  let mainNavItems = [];
+  if (isAdmin) {
+    mainNavItems = [
+      { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+      { text: 'Students', icon: <PeopleIcon />, path: '/students' },
+      { text: 'Teachers', icon: <SchoolIcon />, path: '/teachers' },
+      { text: 'Classes', icon: <MenuBookIcon />, path: '/classes' },
+    ];
+  } else if (isTeacher) {
+    mainNavItems = [
+      { text: 'Teacher Dashboard', icon: <DashboardIcon />, path: '/teacher/dashboard' },
+      { text: 'My Classes', icon: <SchoolIcon />, path: '/teacher/classes' },
+      { text: 'My Students', icon: <PeopleIcon />, path: '/teacher/students' },
+    ];
+  } else if (isStudent) {
+    mainNavItems = [
+      { text: 'Student Dashboard', icon: <DashboardIcon />, path: '/student/dashboard' },
+      { text: 'My Classes', icon: <SchoolIcon />, path: '/student/classes' },
+      { text: 'My Grades', icon: <MenuBookIcon />, path: '/student/grades' },
+    ];
+  }
 
   const settingsNavItems = [
     { text: 'Preferences', icon: <SettingsIcon />, path: '/settings' },
